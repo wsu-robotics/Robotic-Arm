@@ -1,0 +1,51 @@
+#include <Servo.h>  // Includes the Servo manipulation library
+
+const int servo0 = 3; // Initial servo value that will be pinned to the arduino board
+
+const int joyH = 2; // The first joystick that will control the horizontal
+const int joySH = 3; // The second joystick that will control the shoulder in tandem
+const int joyEL = 4; // The third joystick that will control the elbow motion
+const int joyWR = 5; // The last joystick that will control the motion of the wrist
+const int buttonCL = 6; // Button used to control the claw
+
+const int potpin = 0; // Connetion leading to the oscillator
+
+Servo servoBack;  // Servo 0 that will control the base of the ARM - ability to turn 270 degrees
+Servo servoShoulderLeft;  // Servo 1 will be one of the joints to will allow movement for the shoulder component - 180 degrees of motion
+Servo servoShoulderRight;  // Servo 2 will be the opposite joint on the shoulder component - since it is opposite the freedom of motion is opposite Servo 1 ~180 degrees
+Servo servoElbow;  // Servo 3 the elbow joint that will control the "elbow" motion of the ARM - 90 degrees of motion
+Servo servoWrist;  // Servo 4 the wrist joint that will control the "wrist" motion of the ARM - 90 degrees of motion
+Servo servoClaw;  // Servo 5 that will control the opening and closing of the robotic claw.
+
+int serialData = 0; // Serial port to read in available commands to be displayed on screen
+
+void setup () // Assigning inputs to their corresponding outputs
+{
+  // This section is used to connect servos together so that an input command can be carried over to a servo
+  // I'm unsure if this connection process will work since the servos we are using are able to have inputs and output signals generated from them - MAL
+  // This process is as stated: Back-> Shoulders -> Elbow -> Wrist -> Claw; This connection process should work in theory
+  servoBack.attach();
+  servoShoulderLeft.attach(servoBack);
+  servoShoulderRight.attach(servoBack);
+  servoElbow.attach(servoShoulderLeft);
+  servoWrist.attach(servoElbow);
+  servoClaw.attach(servoWrist);
+  
+  Serial.begin(9600); // Begin serial input with 9600 bytes of memory.
+  Serial.println("Ready"); // Serial will print ready regardless if the servos have been assigned properly
+}
+
+void loop() // Looping indefinitely; This process will accept data in and loop it.
+{
+  // This if statement looks for available serial data and prints the results to the process monitor
+  if (Serial.available() > 0)
+    {
+      serialData = Serial.read();
+      Serial.println(serialData);
+    }
+}
+
+void userInput () // This section will accept user input to control the servos
+{
+  
+}
